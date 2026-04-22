@@ -6,6 +6,8 @@ import profileRoutes from "./features/profile/profile.routes";
 import cmsRoutes from "./features/cms/cms.routes";
 import productRoutes from "./features/products/product.routes";
 import galleryRoutes from "./features/gallery/gallery.routes";
+import faqRoutes from "./features/faq/faq.routes";
+
 
 import { connectDB } from "./utils/db";
 
@@ -29,6 +31,8 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/cms", cmsRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/gallery", galleryRoutes);
+app.use("/api/faqs", faqRoutes);
+
 
 
 app.listen(PORT, () => {
