@@ -1,17 +1,19 @@
 import { Request, Response } from "express";
 import * as galleryService from "./gallery.service";
-import { createGallerySchema, updateGallerySchema } from "./gallery.schema";
+
 import { z } from "zod";
 
 export const createGalleryItem = async (req: Request, res: Response) => {
   try {
-    const validatedData = createGallerySchema.parse(req.body);
+    // No body validation needed as only image is uploaded
+
 
     if (!req.file) {
       return res.status(400).json({ message: "Gallery image is required" });
     }
 
-    const newItem = await galleryService.addGalleryService(validatedData, req.file);
+    const newItem = await galleryService.addGalleryService({}, req.file);
+
 
     return res.status(201).json({
       message: "Gallery item created successfully",
@@ -48,12 +50,14 @@ export const getGalleryItemById = async (req: Request, res: Response) => {
 export const updateGalleryItem = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const validatedData = updateGallerySchema.parse(req.body);
+    // No body validation needed
+
 
     const updatedItem = await galleryService.updateGalleryService(
       id as string,
-      validatedData,
+      {},
       req.file
+
     );
 
     return res.status(200).json({

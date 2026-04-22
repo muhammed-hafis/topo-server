@@ -15,7 +15,9 @@ export const getSectionImages = async (req: Request, res: Response) => {
 export const addSectionImage = async (req: Request, res: Response) => {
   try {
     const validatedData = sectionImageSchema.parse(req.body);
-    const { section, title, altText } = validatedData;
+    const { section } = validatedData;
+
+
 
     if (!req.file) {
       return res.status(400).json({ message: "Image file is required" });
@@ -23,10 +25,9 @@ export const addSectionImage = async (req: Request, res: Response) => {
 
     const newImage = await cmsService.addImageService(
       section,
-      title,
-      altText,
       req.file
     );
+
 
     return res.status(201).json({
       message: `${section} image added successfully`,
@@ -43,14 +44,16 @@ export const addSectionImage = async (req: Request, res: Response) => {
 export const updateSectionImage = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { title, altText } = req.body; // Partial update allowed
+    // Partial update allowed
+
+
 
     const updatedImage = await cmsService.updateImageService(
       id as string,
-      title,
-      altText,
       req.file
     );
+
+
 
     return res.status(200).json({
       message: "Image updated successfully",

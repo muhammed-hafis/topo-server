@@ -4,8 +4,6 @@ export interface ISectionImage extends Document {
   section: "hero" | "about" | "why-choose" | "cta";
   imageUrl: string;
   publicId: string;
-  title?: string;
-  altText: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -24,14 +22,6 @@ const SectionImageSchema: Schema = new Schema(
     publicId: {
       type: String,
       required: true,
-    },
-    title: {
-      type: String,
-    },
-    altText: {
-      type: String,
-      required: true,
-      trim: true,
     },
   },
   { timestamps: true }

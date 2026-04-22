@@ -15,7 +15,7 @@ export const getGalleryById = async (id: string) => {
 };
 
 export const addGalleryService = async (
-  data: { altText: string },
+  data: {},
   file: Express.Multer.File
 ) => {
   // 1. Upload to Cloudinary
@@ -23,7 +23,6 @@ export const addGalleryService = async (
 
   // 2. Create in DB
   return await galleryRepository.createGallery({
-    ...data,
     imageUrl: uploadResult.url,
     publicId: uploadResult.publicId,
   });
@@ -31,7 +30,7 @@ export const addGalleryService = async (
 
 export const updateGalleryService = async (
   id: string,
-  data: Partial<{ altText: string }>,
+  data: Partial<{}>,
   file?: Express.Multer.File
 ) => {
   // 1. Find existing item
@@ -40,7 +39,8 @@ export const updateGalleryService = async (
     throw new Error("Gallery item not found");
   }
 
-  let updateData: Partial<IGallery> = { ...data };
+  let updateData: Partial<IGallery> = {};
+
 
   // 2. If new file provided, handle Cloudinary replacement
   if (file) {

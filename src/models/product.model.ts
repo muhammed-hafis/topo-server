@@ -6,7 +6,6 @@ export interface IProduct extends Document {
   description: string;
   imageUrl: string;
   publicId: string;
-  altText: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -35,11 +34,6 @@ const ProductSchema: Schema = new Schema(
     publicId: {
       type: String,
       required: true,
-    },
-    altText: {
-      type: String,
-      required: true,
-      trim: true,
     },
   },
   { timestamps: true }

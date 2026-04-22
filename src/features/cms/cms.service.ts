@@ -16,8 +16,6 @@ export const getImageBySection = async (section: string) => {
 
 export const addImageService = async (
   section: "hero" | "about" | "why-choose" | "cta",
-  title: string | undefined,
-  altText: string,
   file: Express.Multer.File
 ) => {
   // 1. Enforce limits
@@ -38,15 +36,13 @@ export const addImageService = async (
     section,
     imageUrl: uploadResult.url,
     publicId: uploadResult.publicId,
-    title,
-    altText,
+
+
   });
 };
 
 export const updateImageService = async (
   id: string,
-  title: string | undefined,
-  altText: string,
   file?: Express.Multer.File
 ) => {
   // 1. Find existing image
@@ -55,7 +51,9 @@ export const updateImageService = async (
     throw new Error("Image not found");
   }
 
-  let updateData: Partial<ISectionImage> = { title, altText };
+  let updateData: Partial<ISectionImage> = {};
+
+
 
   // 2. If new file provided, handle Cloudinary replacement
   if (file) {

@@ -15,7 +15,8 @@ export const getProductById = async (id: string) => {
 };
 
 export const addProductService = async (
-  data: { productName: string; title: string; description: string; altText: string },
+  data: { productName: string; title: string; description: string },
+
   file: Express.Multer.File
 ) => {
   // 1. Upload to Cloudinary
@@ -31,7 +32,8 @@ export const addProductService = async (
 
 export const updateProductService = async (
   id: string,
-  data: Partial<{ productName: string; title: string; description: string; altText: string }>,
+  data: Partial<{ productName: string; title: string; description: string }>,
+
   file?: Express.Multer.File
 ) => {
   // 1. Find existing product
