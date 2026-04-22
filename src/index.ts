@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 import 'dotenv/config';
+import cookieParser from "cookie-parser";
 import authRoutes from "./features/auth/auth.routes";
+import profileRoutes from "./features/profile/profile.routes";
 import { connectDB } from "./utils/db";
 
 const app = express();
@@ -11,6 +13,7 @@ connectDB();
 
 // Middleware
 app.use(express.json());
+app.use(cookieParser());
 
 app.get("/", (req: Request, res: Response) => {
   res.send("TypeScript + Node.js Server is Running!");
@@ -18,6 +21,7 @@ app.get("/", (req: Request, res: Response) => {
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/profile", profileRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is sprinting on http://localhost:${PORT}`);
