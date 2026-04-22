@@ -3,6 +3,7 @@ import 'dotenv/config';
 import cookieParser from "cookie-parser";
 import authRoutes from "./features/auth/auth.routes";
 import profileRoutes from "./features/profile/profile.routes";
+import cmsRoutes from "./features/cms/cms.routes";
 import { connectDB } from "./utils/db";
 
 const app = express();
@@ -22,6 +23,7 @@ app.get("/", (req: Request, res: Response) => {
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/cms", cmsRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is sprinting on http://localhost:${PORT}`);
