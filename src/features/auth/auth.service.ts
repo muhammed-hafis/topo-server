@@ -15,8 +15,8 @@ export const authenticate = async (email: string, password: string) => {
     throw new Error("Invalid email or password");
   }
 
-  const accessToken = generateAccessToken({ email: user.email });
-  const refreshToken = generateRefreshToken({ email: user.email });
+  const accessToken = generateAccessToken({ email: user.email,id:user._id });
+  const refreshToken = generateRefreshToken({ email: user.email,id:user._id });
 
   return { accessToken, refreshToken };
 };
@@ -24,7 +24,7 @@ export const authenticate = async (email: string, password: string) => {
 export const refreshAccessToken = async (token: string) => {
   try {
     const decoded: any = verifyRefreshToken(token);
-    const accessToken = generateAccessToken({ email: decoded.email });
+    const accessToken = generateAccessToken({ email: decoded.email,id:decoded.id });
     return { accessToken };
   } catch (error) {
     throw new Error("Invalid refresh token");

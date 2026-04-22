@@ -6,8 +6,8 @@ import { authenticateAdmin } from "../../utils/auth.middleware";
 const router = Router();
 
 // CMS routes
-router.get("/images", authenticateAdmin, getSectionImages);
-router.get("/images/:section", authenticateAdmin, getSectionImageBySection);
+router.get("/images", getSectionImages);
+router.get("/images/:section", getSectionImageBySection);
 router.post("/images", authenticateAdmin, upload.single("image"), addSectionImage);
 router.put("/images/:id", authenticateAdmin, upload.single("image"), updateSectionImage);
 router.delete("/images/:id", authenticateAdmin, deleteSectionImage);
