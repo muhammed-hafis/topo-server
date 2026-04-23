@@ -22,7 +22,6 @@ async function seedAdmin() {
 
         // create admin
         const admin = await Admin.create({
-            name: "Admin",
             email: "admin@gmail.com",
             password: "admin@123"
         });

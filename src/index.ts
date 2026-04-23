@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import 'dotenv/config';
 import cookieParser from "cookie-parser";
 import authRoutes from "./features/auth/auth.routes";
-import profileRoutes from "./features/profile/profile.routes";
+
 import cmsRoutes from "./features/cms/cms.routes";
 import productRoutes from "./features/products/product.routes";
 import galleryRoutes from "./features/gallery/gallery.routes";
@@ -27,7 +27,7 @@ app.get("/", (req: Request, res: Response) => {
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/profile", profileRoutes);
+
 app.use("/api/cms", cmsRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/gallery", galleryRoutes);
