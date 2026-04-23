@@ -14,7 +14,7 @@ export const createFAQ = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ message: "Validation failed", errors: error.issues });
+      return res.status(400).json({ message: error.issues[0].message, errors: error.issues });
     }
     return res.status(400).json({ message: error.message || "Failed to create FAQ" });
   }
@@ -53,7 +53,7 @@ export const updateFAQ = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ message: "Validation failed", errors: error.issues });
+      return res.status(400).json({ message: error.issues[0].message, errors: error.issues });
     }
     return res.status(400).json({ message: error.message || "Failed to update FAQ" });
   }
