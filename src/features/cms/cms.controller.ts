@@ -46,7 +46,9 @@ export const updateSectionImage = async (req: Request, res: Response) => {
     const { id } = req.params;
     // Partial update allowed
 
-
+    if (!req.file) {
+      return res.status(400).json({ message: "Image file is required for update" });
+    }
 
     const updatedImage = await cmsService.updateImageService(
       id as string,
