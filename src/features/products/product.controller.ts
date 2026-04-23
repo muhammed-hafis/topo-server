@@ -4,6 +4,7 @@ import { createProductSchema, updateProductSchema } from "./product.schema";
 import { z } from "zod";
 
 export const createProduct = async (req: Request, res: Response) => {
+  console.log("Running from:", __filename);
   try {
     const validatedData = createProductSchema.parse(req.body);
 

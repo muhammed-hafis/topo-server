@@ -7,6 +7,7 @@ import cmsRoutes from "./features/cms/cms.routes";
 import productRoutes from "./features/products/product.routes";
 import galleryRoutes from "./features/gallery/gallery.routes";
 import faqRoutes from "./features/faq/faq.routes";
+import reelsRoutes from "./features/reels/reels.routes";
 
 
 import { connectDB } from "./utils/db";
@@ -32,6 +33,7 @@ app.use("/api/cms", cmsRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api/faqs", faqRoutes);
+app.use("/api/reels", reelsRoutes);
 
 
 
