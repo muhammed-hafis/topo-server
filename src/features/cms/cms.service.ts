@@ -1,6 +1,6 @@
 import * as cmsRepository from "./cms.repository";
 import { uploadBufferToCloudinary, deleteFromCloudinary } from "../../utils/cloudinary";
-import { ISectionImage } from "../../models/section-image.model";
+import { ISectionImage } from "./section-image.model";
 
 export const getAllImages = async () => {
   return await cmsRepository.findAllImages();
@@ -58,7 +58,7 @@ export const updateImageService = async (
   // 2. If new file provided, handle Cloudinary replacement
   if (file) {
     const uploadResult = await uploadBufferToCloudinary(file.buffer, `topo-admin/${existingImage.section}`);
-    
+
     // Delete old one
     if (existingImage.publicId) {
       await deleteFromCloudinary(existingImage.publicId).catch((err) =>

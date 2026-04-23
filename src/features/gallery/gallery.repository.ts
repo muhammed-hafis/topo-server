@@ -1,4 +1,4 @@
-import Gallery, { IGallery } from "../../models/gallery.model";
+import Gallery, { IGallery } from "./gallery.model";
 
 export const createGallery = async (data: Partial<IGallery>) => {
   return await Gallery.create(data);

@@ -1,5 +1,5 @@
 import * as faqRepository from "./faq.repository";
-import { IFAQ } from "../../models/faq.model";
+import { IFAQ } from "./faq.model";
 
 export const getAllFAQs = async () => {
   return await faqRepository.findAllFAQs();

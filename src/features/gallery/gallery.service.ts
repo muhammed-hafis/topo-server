@@ -1,6 +1,6 @@
 import * as galleryRepository from "./gallery.repository";
 import { uploadBufferToCloudinary, deleteFromCloudinary } from "../../utils/cloudinary";
-import { IGallery } from "../../models/gallery.model";
+import { IGallery } from "./gallery.model";
 
 export const getAllGalleryItems = async () => {
   return await galleryRepository.findAllGalleryItems();

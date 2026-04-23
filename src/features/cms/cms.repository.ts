@@ -1,4 +1,4 @@
-import SectionImage, { ISectionImage } from "../../models/section-image.model";
+import SectionImage, { ISectionImage } from "./section-image.model";
 
 export const findAllImages = async (): Promise<ISectionImage[]> => {
   return await SectionImage.find();

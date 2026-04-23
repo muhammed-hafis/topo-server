@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { Admin } from "./models/admin.model";
+import { Admin } from "./features/auth/admin.model";
 // load env
 dotenv.config();
 
@@ -19,12 +19,12 @@ async function seedAdmin() {
             process.exit();
         }
 
-        
+
         // create admin
         const admin = await Admin.create({
             name: "Admin",
             email: "admin@gmail.com",
-            password:"admin@123"
+            password: "admin@123"
         });
 
         console.log("🎉 Admin created:", admin.email);

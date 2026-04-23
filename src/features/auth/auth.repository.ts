@@ -1,4 +1,4 @@
-import { Admin } from "../../models/admin.model";
+import { Admin } from "./admin.model";
 
 export const findAdminByEmail = async (email: string) => {
   return await Admin.findOne({ email });

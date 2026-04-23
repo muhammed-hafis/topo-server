@@ -1,4 +1,4 @@
-import FAQ, { IFAQ } from "../../models/faq.model";
+import FAQ, { IFAQ } from "./faq.model";
 
 export const createFAQ = async (data: Partial<IFAQ>) => {
   return await FAQ.create(data);
