@@ -8,9 +8,6 @@ export const getAllImages = async () => {
 
 export const getImageBySection = async (section: string) => {
   const images = await cmsRepository.findBySection(section);
-  if (!images || images.length === 0) {
-    throw new Error(`No image found for section: ${section}`);
-  }
   return images;
 };
 

@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express";
+import cors from "cors";
 import 'dotenv/config';
 import cookieParser from "cookie-parser";
 import authRoutes from "./features/auth/auth.routes";
@@ -19,6 +20,10 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 // Middleware
+app.use(cors({
+  origin: "http://localhost:3000", // allow frontend
+  credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
 

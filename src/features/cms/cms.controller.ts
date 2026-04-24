@@ -75,14 +75,16 @@ export const deleteSectionImage = async (req: Request, res: Response) => {
     return res.status(400).json({ message: error.message || "Failed to delete image" });
   }
 };
-
 export const getSectionImageBySection = async (req: Request, res: Response) => {
   try {
     const { section } = req.params;
-    const image = await cmsService.getImageBySection(section as string);
-    return res.status(200).json(image);
+
+    const images = await cmsService.getImageBySection(section as string);
+
+    return res.status(200).json(images);
   } catch (error: any) {
-    const status = error.message.includes("No image found") ? 404 : 500;
-    return res.status(status).json({ message: error.message || "Internal server error" });
+    return res.status(500).json({
+      message: error.message || "Internal server error",
+    });
   }
 };
