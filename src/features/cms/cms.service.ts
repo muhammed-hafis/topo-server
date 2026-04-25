@@ -7,8 +7,7 @@ export const getAllImages = async () => {
 };
 
 export const getImageBySection = async (section: string) => {
-  const images = await cmsRepository.findBySection(section);
-  return images;
+  return cmsRepository.findBySection(section);
 };
 
 export const addImageService = async (
