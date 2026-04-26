@@ -4,9 +4,7 @@ export const createProduct = async (data: Partial<IProduct>) => {
   return await Product.create(data);
 };
 
-export const findAllProducts = async () => {
-  return await Product.find().sort({ createdAt: -1 });
-};
+export const findAllProducts = () => Product.find().sort({ createdAt: -1 })
 
 export const findProductById = async (id: string) => {
   return await Product.findById(id);
