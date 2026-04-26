@@ -1,9 +1,6 @@
 import * as faqRepository from "./faq.repository";
-import { IFAQ } from "./faq.model";
 
-export const getAllFAQs = async () => {
-  return await faqRepository.findAllFAQs();
-};
+export const getAllFAQs = () => faqRepository.findAllFAQs();
 
 export const getFAQById = async (id: string) => {
   const faq = await faqRepository.findFAQById(id);

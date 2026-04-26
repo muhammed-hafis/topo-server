@@ -4,9 +4,7 @@ export const createFAQ = async (data: Partial<IFAQ>) => {
   return await FAQ.create(data);
 };
 
-export const findAllFAQs = async () => {
-  return await FAQ.find().sort({ createdAt: -1 });
-};
+export const findAllFAQs = () => FAQ.find().sort({ createdAt: -1 });
 
 export const findFAQById = async (id: string) => {
   return await FAQ.findById(id);
