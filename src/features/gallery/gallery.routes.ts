@@ -4,7 +4,7 @@ import { upload } from "../../utils/upload";
 import { authenticateAdmin } from "../../utils/auth.middleware";
 const router = Router();
 
-router.get("/", galleryController.getAllGalleryItems);
+router.get("/", galleryController.getAllGalleryImages);
 router.get("/:id", galleryController.getGalleryItemById);
 
 // Protected routes
