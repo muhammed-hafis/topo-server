@@ -4,9 +4,8 @@ export const createTestimonial = async (data: Partial<ITestimonial>) => {
   return await Testimonial.create(data);
 };
 
-export const findAllTestimonials = async () => {
-  return Testimonial.find().sort({ createdAt: -1 });
-};
+export const findAllTestimonials = () => Testimonial.find().sort({ createdAt: -1 });
+
 
 export const findTestimonialById = async (id: string) => {
   return await Testimonial.findById(id);

@@ -30,8 +30,6 @@ export const getAllTestimonials = async (req: Request, res: Response) => {
     const testimonials = await testimonialService.getAllTestimonials();
     return res.status(200).json(testimonials);
   } catch (error: any) {
-    console.error("Error fetching testimonials:", error); 
-
     return res.status(500).json({
       message: "Failed to fetch testimonials", 
     });

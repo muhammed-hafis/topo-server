@@ -15,9 +15,7 @@ export const createTestimonialService = async (
   });
 };
 
-export const getAllTestimonials = async () => {
-  return testimonialRepository.findAllTestimonials();
-};
+export const getAllTestimonials = () => testimonialRepository.findAllTestimonials();
 
 export const getTestimonialById = async (id: string) => {
   const testimonial = await testimonialRepository.findTestimonialById(id);
