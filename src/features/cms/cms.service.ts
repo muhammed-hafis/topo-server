@@ -1,6 +1,7 @@
 import * as cmsRepository from "./cms.repository";
 import { uploadBufferToCloudinary, deleteFromCloudinary } from "../../utils/cloudinary";
 import { ISectionImage } from "./section-image.model";
+import { isValidObjectId } from "mongoose";
 
 export const getAllImages = async () => {
   return await cmsRepository.findAllImages();
@@ -25,21 +26,31 @@ export const addImageService = async (
   }
 
   // 2. Upload to Cloudinary
-  const uploadResult = await uploadBufferToCloudinary(file.buffer, `topo-admin/${section}`);
-
+  let uploadResult;
+  try {
+    uploadResult = await uploadBufferToCloudinary(file.buffer, `topo-admin/${section}`);
+  } catch (error) {
+    throw new Error(`Cloudinary upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
   // 3. Create in DB
-  return await cmsRepository.createSectionImage({
+  try {
+      return await cmsRepository.createSectionImage({
     section,
     imageUrl: uploadResult.url,
     publicId: uploadResult.publicId,
 
 
   });
+  } catch (error) {
+    await deleteFromCloudinary(uploadResult.publicId).catch(() => { });
+    throw new Error(`Failed to save image metadata: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+
 };
 
 export const updateImageService = async (
   id: string,
-  file?: Express.Multer.File
+  file: Express.Multer.File  // ← Now required, not optional
 ) => {
   // 1. Find existing image
   const existingImage = await cmsRepository.findById(id);
@@ -49,38 +60,60 @@ export const updateImageService = async (
 
   let updateData: Partial<ISectionImage> = {};
 
+  try {
+    // 2. Upload new file to Cloudinary
+    const uploadResult = await uploadBufferToCloudinary(
+      file.buffer,
+      `topo-admin/${existingImage.section}`
+    );
 
+    updateData.imageUrl = uploadResult.url;
+    updateData.publicId = uploadResult.publicId;
 
-  // 2. If new file provided, handle Cloudinary replacement
-  if (file) {
-    const uploadResult = await uploadBufferToCloudinary(file.buffer, `topo-admin/${existingImage.section}`);
-
-    // Delete old one
+    // 3. Delete old image (non-blocking, but log errors)
     if (existingImage.publicId) {
-      await deleteFromCloudinary(existingImage.publicId).catch((err) =>
+      deleteFromCloudinary(existingImage.publicId).catch((err) =>
         console.error("Failed to delete old image from Cloudinary:", err)
       );
     }
 
-    updateData.imageUrl = uploadResult.url;
-    updateData.publicId = uploadResult.publicId;
+    // 4. Update in DB
+    return await cmsRepository.updateById(id, updateData);
+  } catch (error) {
+    // Cleanup: delete uploaded file if DB update fails
+    if (updateData.publicId) {
+      await deleteFromCloudinary(updateData.publicId).catch(() => {
+        // Silent fail on cleanup
+      });
+    }
+    throw error;
   }
-
-  // 3. Update in DB
-  return await cmsRepository.updateById(id, updateData);
 };
 
+
 export const deleteImageService = async (id: string) => {
-  const image = await cmsRepository.findById(id);
+
+  if(!isValidObjectId(id)){
+    throw new Error("Invalid image ID");
+  }
+
+  const image = await cmsRepository.deleteById(id);
+  
   if (!image) {
     throw new Error("Image not found");
   }
 
   // 1. Delete from Cloudinary
   if (image.publicId) {
-    await deleteFromCloudinary(image.publicId);
+    deleteFromCloudinary(image.publicId)
+      .catch((err) => {
+        console.error(
+          `Failed to delete Cloudinary asset ${image.publicId}:`,
+          err.message
+        );
+      });
   }
 
   // 2. Delete from DB
-  return await cmsRepository.deleteById(id);
+  return image;
 };
