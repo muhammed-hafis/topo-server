@@ -5,7 +5,7 @@ import { authenticateAdmin } from "../../utils/auth.middleware";
 const router = Router();
 
 router.get("/", reelsController.getAllReels);
-router.get("/:id", authenticateAdmin, reelsController.getReelById);
+router.get("/:id", reelsController.getReelById);
 
 // Protected routes
 router.post("/", authenticateAdmin, reelsController.createReel);

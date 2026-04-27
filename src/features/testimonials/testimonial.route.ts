@@ -18,7 +18,7 @@ router.post(
 router.patch(
   "/:id",
   authenticateAdmin,
-  upload.single("profileImage"),
+  upload.single("avatar"),
   testimonialController.updateTestimonial
 );
 

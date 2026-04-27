@@ -8,8 +8,8 @@ const router = Router();
 // CMS routes
 router.get("/images", getSectionImages);
 router.get("/images/:section", getSectionImageBySection);
-router.post("/images", upload.single("image"), addSectionImage);
-router.put("/images/:id", upload.single("image"), updateSectionImage);
-router.delete("/images/:id", deleteSectionImage);
+router.post("/images", authenticateAdmin, upload.single("image"), addSectionImage);
+router.put("/images/:id", authenticateAdmin, upload.single("image"), updateSectionImage);
+router.delete("/images/:id", authenticateAdmin, deleteSectionImage);
 
 export default router;

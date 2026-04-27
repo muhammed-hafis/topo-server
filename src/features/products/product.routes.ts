@@ -9,8 +9,8 @@ router.get("/", productController.getAllProducts);
 router.get("/:id", productController.getProductById);
 
 // Protected routes
-router.post("/", upload.single("image"), productController.createProduct);
-router.patch("/:id", upload.single("image"), productController.updateProduct);
-router.delete("/:id", productController.deleteProduct);
+router.post("/", authenticateAdmin, upload.single("image"), productController.createProduct);
+router.patch("/:id", authenticateAdmin, upload.single("image"), productController.updateProduct);
+router.delete("/:id", authenticateAdmin, productController.deleteProduct);
 
 export default router;
