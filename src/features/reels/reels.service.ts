@@ -16,7 +16,6 @@ export const getReelById = async (id: string) => {
 export const addReelService = async (
   data: { title: string; link: string }
 ) => {
-  // Directly create in DB
   return await reelsRepository.createReel(data);
 };
 
