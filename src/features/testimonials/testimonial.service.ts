@@ -6,7 +6,12 @@ export const createTestimonialService = async (
   data: Partial<ITestimonial>,
   file: Express.Multer.File
 ) => {
-  const uploadResult = await uploadBufferToCloudinary(file.buffer, "topo-admin/testimonials");
+  let uploadResult;
+  try {
+    uploadResult = await uploadBufferToCloudinary(file.buffer, "topo-admin/testimonials");
+  } catch {
+    throw new Error("Image upload failed. Please try again.");
+  }
 
   return await testimonialRepository.createTestimonial({
     ...data,
@@ -38,7 +43,12 @@ export const updateTestimonialService = async (
   let updateData: Partial<ITestimonial> = { ...data };
 
   if (file) {
-    const uploadResult = await uploadBufferToCloudinary(file.buffer, "topo-admin/testimonials");
+    let uploadResult;
+    try {
+      uploadResult = await uploadBufferToCloudinary(file.buffer, "topo-admin/testimonials");
+    } catch {
+      throw new Error("Image upload failed. Please try again.");
+    }
 
     if (existingTestimonial.publicId) {
       await deleteFromCloudinary(existingTestimonial.publicId).catch((err) =>

@@ -18,7 +18,12 @@ export const addProductService = async (
   file: Express.Multer.File
 ) => {
   // 1. Upload to Cloudinary
-  const uploadResult = await uploadBufferToCloudinary(file.buffer, "topo-admin/products");
+  let uploadResult;
+  try {
+    uploadResult = await uploadBufferToCloudinary(file.buffer, "topo-admin/products");
+  } catch {
+    throw new Error("Image upload failed. Please try again.");
+  }
 
   // 2. Create in DB
   return await productRepository.createProduct({
@@ -44,7 +49,12 @@ export const updateProductService = async (
 
   // 2. If new file provided, handle Cloudinary replacement
   if (file) {
-    const uploadResult = await uploadBufferToCloudinary(file.buffer, "topo-admin/products");
+    let uploadResult;
+    try {
+      uploadResult = await uploadBufferToCloudinary(file.buffer, "topo-admin/products");
+    } catch {
+      throw new Error("Image upload failed. Please try again.");
+    }
 
     // Delete old one
     if (existingProduct.publicId) {

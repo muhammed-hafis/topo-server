@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import 'dotenv/config';
 import cookieParser from "cookie-parser";
@@ -42,8 +42,18 @@ app.use("/api/faqs", faqRoutes);
 app.use("/api/reels", reelsRoutes);
 app.use("/api/testimonials", testimonialRoutes);
 
-
+// Global error handler (catches multer errors + any other next(err))
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  if (err.code === "LIMIT_FILE_SIZE") {
+    return res.status(400).json({ message: "Image is too large. Maximum allowed size is 10MB." });
+  }
+  if (err.message) {
+    return res.status(400).json({ message: err.message });
+  }
+  return res.status(500).json({ message: "Something went wrong. Please try again." });
+});
 
 app.listen(PORT, () => {
   console.log(`Server is sprinting on http://localhost:${PORT}`);
 });
+
