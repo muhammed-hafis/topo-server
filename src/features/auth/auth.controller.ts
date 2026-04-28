@@ -3,13 +3,26 @@ import { z } from "zod";
 import { authenticate, refreshAccessToken } from "./auth.service";
 import { loginSchema } from "./auth.schema";
 
+const formatZodErrors = (error: z.ZodError): Record<string, string> =>
+  error.issues.reduce((acc, issue) => {
+    const field = issue.path[0] as string;
+    if (!acc[field]) acc[field] = issue.message;
+    return acc;
+  }, {} as Record<string, string>);
+
 export const login = async (req: Request, res: Response) => {
   try {
-    const validatedData = loginSchema.parse(req.body);
+    const parsed = loginSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({
+        message: "Validation failed",
+        errors: formatZodErrors(parsed.error),
+      });
+    }
 
     const { accessToken, refreshToken } = await authenticate(
-      validatedData.email,
-      validatedData.password
+      parsed.data.email,
+      parsed.data.password
     );
 
     res.cookie("refreshToken", refreshToken, {
@@ -19,26 +32,12 @@ export const login = async (req: Request, res: Response) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
-    return res.status(200).json({
-      message: "Login successful",
-      accessToken,
-    });
+    return res.status(200).json({ message: "Login successful", accessToken });
   } catch (error: any) {
-    if (error instanceof z.ZodError) {
-      return res.status(400).json({
-        message: "Validation failed",
-        errors: error.issues.map((e) => ({
-          path: e.path,
-          message: e.message,
-        })),
-      });
-    }
-
-    return res.status(401).json({
-      message: error.message || "Internal server error",
-    });
+    return res.status(401).json({ message: error.message || "Invalid credentials" });
   }
 };
+
 
 export const handleRefresh = async (req: Request, res: Response) => {
   try {
@@ -54,4 +53,13 @@ export const handleRefresh = async (req: Request, res: Response) => {
   } catch (error: any) {
     return res.status(401).json({ message: error.message || "Unauthorized" });
   }
+};
+
+export const logout = (req: Request, res: Response) => {
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+  return res.status(200).json({ message: "Logged out successfully" });
 };

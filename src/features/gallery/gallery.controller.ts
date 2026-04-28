@@ -1,29 +1,24 @@
 import { Request, Response } from "express";
 import * as galleryService from "./gallery.service";
-
 import { z } from "zod";
 
 export const createGalleryItem = async (req: Request, res: Response) => {
   try {
-    // No body validation needed as only image is uploaded
-
-
     if (!req.file) {
-      return res.status(400).json({ message: "Gallery image is required" });
+      return res.status(400).json({
+        message: "Validation failed",
+        errors: { image: "Gallery image is required" },
+      });
     }
 
     const newItem = await galleryService.addGalleryService({}, req.file);
-
 
     return res.status(201).json({
       message: "Gallery item created successfully",
       data: newItem,
     });
   } catch (error: any) {
-    if (error instanceof z.ZodError) {
-      return res.status(400).json({ message: "Validation failed", errors: error.issues });
-    }
-    return res.status(400).json({ message: error.message || "Failed to create gallery item" });
+    return res.status(500).json({ message: error.message || "Failed to create gallery item" });
   }
 };
 
@@ -38,8 +33,8 @@ export const getAllGalleryImages = async (req: Request, res: Response) => {
 
 export const getGalleryItemById = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    const item = await galleryService.getGalleryById(id as string);
+    const id = req.params.id as string;
+    const item = await galleryService.getGalleryById(id);
     return res.status(200).json(item);
   } catch (error: any) {
     const status = error.message === "Gallery item not found" ? 404 : 500;
@@ -49,35 +44,27 @@ export const getGalleryItemById = async (req: Request, res: Response) => {
 
 export const updateGalleryItem = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    // No body validation needed
+    const id = req.params.id as string;
 
-
-    const updatedItem = await galleryService.updateGalleryService(
-      id as string,
-      {},
-      req.file
-
-    );
+    const updatedItem = await galleryService.updateGalleryService(id, {}, req.file);
 
     return res.status(200).json({
       message: "Gallery item updated successfully",
       data: updatedItem,
     });
   } catch (error: any) {
-    if (error instanceof z.ZodError) {
-      return res.status(400).json({ message: "Validation failed", errors: error.issues });
-    }
-    return res.status(400).json({ message: error.message || "Failed to update gallery item" });
+    const status = error.message === "Gallery item not found" ? 404 : 500;
+    return res.status(status).json({ message: error.message || "Failed to update gallery item" });
   }
 };
 
 export const deleteGalleryItem = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    await galleryService.deleteGalleryService(id as string);
+    const id = req.params.id as string;
+    await galleryService.deleteGalleryService(id);
     return res.status(200).json({ message: "Gallery item deleted successfully" });
   } catch (error: any) {
-    return res.status(400).json({ message: error.message || "Failed to delete gallery item" });
+    const status = error.message === "Gallery item not found" ? 404 : 500;
+    return res.status(status).json({ message: error.message || "Failed to delete gallery item" });
   }
 };
