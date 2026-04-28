@@ -42,7 +42,7 @@ app.use("/api/faqs", faqRoutes);
 app.use("/api/reels", reelsRoutes);
 app.use("/api/testimonials", testimonialRoutes);
 
-// Global error handler (catches multer errors + any other next(err))
+// Global error handler
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   if (err.code === "LIMIT_FILE_SIZE") {
     return res.status(400).json({ message: "Image is too large. Maximum allowed size is 10MB." });

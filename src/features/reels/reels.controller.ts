@@ -20,7 +20,14 @@ export const createReel = async (req: Request, res: Response) => {
       });
     }
 
-    const newReel = await reelsService.addReelService(parsed.data);
+    if (!req.file) {
+      return res.status(400).json({
+        message: "Validation failed",
+        errors: { thumbnail: "Thumbnail is required" },
+      });
+    }
+
+    const newReel = await reelsService.addReelService(parsed.data, req.file);
     return res.status(201).json({ message: "Reel created successfully", data: newReel });
   } catch (error: any) {
     if (error.code === 11000) {
@@ -61,7 +68,7 @@ export const updateReel = async (req: Request, res: Response) => {
       });
     }
 
-    const updatedReel = await reelsService.updateReelService(id, parsed.data);
+    const updatedReel = await reelsService.updateReelService(id, parsed.data, req.file);
     return res.status(200).json({ message: "Reel updated successfully", data: updatedReel });
   } catch (error: any) {
     if (error.code === 11000) {

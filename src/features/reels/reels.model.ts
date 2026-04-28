@@ -1,7 +1,8 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IReel extends Document {
-  title: string;
+  thumbnail: string;
+  publicId: string;
   link: string;
   createdAt: Date;
   updatedAt: Date;
@@ -9,10 +10,13 @@ export interface IReel extends Document {
 
 const ReelSchema: Schema = new Schema(
   {
-    title: {
+    thumbnail: {
       type: String,
       required: true,
-      trim: true,
+    },
+    publicId: {
+      type: String,
+      required: true,
     },
     link: {
       type: String,
