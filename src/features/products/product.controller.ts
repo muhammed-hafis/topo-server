@@ -3,26 +3,39 @@ import * as productService from "./product.service";
 import { createProductSchema, updateProductSchema } from "./product.schema";
 import { z } from "zod";
 
-export const createProduct = async (req: Request, res: Response) => {
-  console.log("Running from:", __filename);
-  try {
-    const validatedData = createProductSchema.parse(req.body);
+const formatZodErrors = (error: z.ZodError): Record<string, string> =>
+  error.issues.reduce((acc, issue) => {
+    const field = issue.path[0] as string;
+    if (!acc[field]) acc[field] = issue.message;
+    return acc;
+  }, {} as Record<string, string>);
 
-    if (!req.file) {
-      return res.status(400).json({ message: "Product image is required" });
+export const createProduct = async (req: Request, res: Response) => {
+  try {
+    const parsed = createProductSchema.safeParse(req.body);
+
+    if (!parsed.success) {
+      return res.status(400).json({
+        message: "Validation failed",
+        errors: formatZodErrors(parsed.error),
+      });
     }
 
-    const newProduct = await productService.addProductService(validatedData, req.file);
+    if (!req.file) {
+      return res.status(400).json({
+        message: "Validation failed",
+        errors: { image: "Product image is required" },
+      });
+    }
+
+    const newProduct = await productService.addProductService(parsed.data, req.file);
 
     return res.status(201).json({
       message: "Product created successfully",
       data: newProduct,
     });
   } catch (error: any) {
-    if (error instanceof z.ZodError) {
-      return res.status(400).json({ message: "Validation failed", errors: error.issues });
-    }
-    return res.status(400).json({ message: error.message || "Failed to create product" });
+    return res.status(500).json({ message: error.message || "Failed to create product" });
   }
 };
 
@@ -37,8 +50,8 @@ export const getAllProducts = async (req: Request, res: Response) => {
 
 export const getProductById = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    const product = await productService.getProductById(id as string);
+    const id = req.params.id as string;
+    const product = await productService.getProductById(id);
     return res.status(200).json(product);
   } catch (error: any) {
     const status = error.message === "Product not found" ? 404 : 500;
@@ -48,33 +61,35 @@ export const getProductById = async (req: Request, res: Response) => {
 
 export const updateProduct = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    const validatedData = updateProductSchema.parse(req.body);
+    const id = req.params.id as string;
+    const parsed = updateProductSchema.safeParse(req.body);
 
-    const updatedProduct = await productService.updateProductService(
-      id as string,
-      validatedData,
-      req.file
-    );
+    if (!parsed.success) {
+      return res.status(400).json({
+        message: "Validation failed",
+        errors: formatZodErrors(parsed.error),
+      });
+    }
+
+    const updatedProduct = await productService.updateProductService(id, parsed.data, req.file);
 
     return res.status(200).json({
       message: "Product updated successfully",
       data: updatedProduct,
     });
   } catch (error: any) {
-    if (error instanceof z.ZodError) {
-      return res.status(400).json({ message: "Validation failed", errors: error.issues });
-    }
-    return res.status(400).json({ message: error.message || "Failed to update product" });
+    const status = error.message === "Product not found" ? 404 : 500;
+    return res.status(status).json({ message: error.message || "Failed to update product" });
   }
 };
 
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    await productService.deleteProductService(id as string);
+    const id = req.params.id as string;
+    await productService.deleteProductService(id);
     return res.status(200).json({ message: "Product deleted successfully" });
   } catch (error: any) {
-    return res.status(400).json({ message: error.message || "Failed to delete product" });
+    const status = error.message === "Product not found" ? 404 : 500;
+    return res.status(status).json({ message: error.message || "Failed to delete product" });
   }
 };

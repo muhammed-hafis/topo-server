@@ -3,6 +3,13 @@ import * as faqService from "./faq.service";
 import { createFAQSchema, updateFAQSchema } from "./faq.schema";
 import { z } from "zod";
 
+const formatZodErrors = (error: z.ZodError): Record<string, string> =>
+  error.issues.reduce((acc, issue) => {
+    const field = issue.path[0] as string;
+    if (!acc[field]) acc[field] = issue.message;
+    return acc;
+  }, {} as Record<string, string>);
+
 export const createFAQ = async (req: Request, res: Response) => {
   try {
     const validatedData = createFAQSchema.parse(req.body);
