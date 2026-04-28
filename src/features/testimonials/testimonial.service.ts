@@ -1,5 +1,5 @@
 import * as testimonialRepository from "./testimonial.repository";
-import { uploadBufferToCloudinary, deleteFromCloudinary } from "../../utils/cloudinary";
+import { uploadBufferToCloudinary, deleteFromCloudinary } from "../../config/cloudinary";
 import { ITestimonial } from "./testimonial.model";
 
 export const createTestimonialService = async (

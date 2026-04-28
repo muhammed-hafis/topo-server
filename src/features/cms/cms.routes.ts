@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { getSectionImages, addSectionImage, updateSectionImage, deleteSectionImage, getSectionImageBySection } from "./cms.controller";
-import { upload } from "../../utils/upload";
-import { authenticateAdmin } from "../../utils/auth.middleware";
+import { upload } from "../../config/upload";
+import { authenticateAdmin } from "../../middlewares/auth.middleware";
 
 const router = Router();
 

@@ -1,5 +1,5 @@
 import * as galleryRepository from "./gallery.repository";
-import { uploadBufferToCloudinary, deleteFromCloudinary } from "../../utils/cloudinary";
+import { uploadBufferToCloudinary, deleteFromCloudinary } from "../../config/cloudinary";
 import { IGallery } from "./gallery.model";
 
 export const getAllGalleryImages = () => galleryRepository.findAllGalleryImages();

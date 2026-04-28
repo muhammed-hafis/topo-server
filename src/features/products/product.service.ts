@@ -1,5 +1,5 @@
 import * as productRepository from "./product.repository";
-import { uploadBufferToCloudinary, deleteFromCloudinary } from "../../utils/cloudinary";
+import { uploadBufferToCloudinary, deleteFromCloudinary } from "../../config/cloudinary";
 import { IProduct } from "./product.model";
 
 export const getAllProducts = () => productRepository.findAllProducts();

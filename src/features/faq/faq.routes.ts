@@ -1,6 +1,6 @@
 import { Router } from "express";
 import * as faqController from "./faq.controller";
-import { authenticateAdmin } from "../../utils/auth.middleware";
+import { authenticateAdmin } from "../../middlewares/auth.middleware";
 
 const router = Router();
 

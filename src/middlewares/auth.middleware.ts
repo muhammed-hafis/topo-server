@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { verifyAccessToken } from "./token";
+import { verifyAccessToken } from "../utils/token";
 import { Admin } from "../features/auth/admin.model";
 
 export interface AuthRequest extends Request {

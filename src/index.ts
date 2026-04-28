@@ -12,7 +12,7 @@ import reelsRoutes from "./features/reels/reels.routes";
 import testimonialRoutes from "./features/testimonials/testimonial.route";
 
 
-import { connectDB } from "./utils/db";
+import { connectDB } from "./config/db";
 
 const app = express();
 const PORT = process.env.PORT || 5000;

@@ -1,5 +1,5 @@
 import * as cmsRepository from "./cms.repository";
-import { uploadBufferToCloudinary, deleteFromCloudinary } from "../../utils/cloudinary";
+import { uploadBufferToCloudinary, deleteFromCloudinary } from "../../config/cloudinary";
 import { ISectionImage } from "./section-image.model";
 import { isValidObjectId } from "mongoose";
 
@@ -34,13 +34,13 @@ export const addImageService = async (
   }
   // 3. Create in DB
   try {
-      return await cmsRepository.createSectionImage({
-    section,
-    imageUrl: uploadResult.url,
-    publicId: uploadResult.publicId,
+    return await cmsRepository.createSectionImage({
+      section,
+      imageUrl: uploadResult.url,
+      publicId: uploadResult.publicId,
 
 
-  });
+    });
   } catch (error) {
     await deleteFromCloudinary(uploadResult.publicId).catch(() => { });
     throw new Error(`Failed to save image metadata: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -93,12 +93,12 @@ export const updateImageService = async (
 
 export const deleteImageService = async (id: string) => {
 
-  if(!isValidObjectId(id)){
+  if (!isValidObjectId(id)) {
     throw new Error("Invalid image ID");
   }
 
   const image = await cmsRepository.deleteById(id);
-  
+
   if (!image) {
     throw new Error("Image not found");
   }
