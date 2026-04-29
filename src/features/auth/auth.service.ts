@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../../utils/token";
+import { generateAccessToken } from "../../utils/token";
 import { findAdminByEmail } from "./auth.repository";
 
 export const authenticate = async (email: string, password: string) => {
@@ -16,17 +16,8 @@ export const authenticate = async (email: string, password: string) => {
   }
 
   const accessToken = generateAccessToken({ email: user.email,id:user._id });
-  const refreshToken = generateRefreshToken({ email: user.email,id:user._id });
 
-  return { accessToken, refreshToken };
+  return { accessToken };
 };
 
-export const refreshAccessToken = async (token: string) => {
-  try {
-    const decoded: any = verifyRefreshToken(token);
-    const accessToken = generateAccessToken({ email: decoded.email,id:decoded.id });
-    return { accessToken };
-  } catch (error) {
-    throw new Error("Invalid refresh token");
-  }
-};
+

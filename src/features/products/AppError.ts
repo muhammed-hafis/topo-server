@@ -1,4 +1,4 @@
-// utils/appError.ts
+// utils/appE
 interface AppError extends Error {
     statusCode: number;
 }
