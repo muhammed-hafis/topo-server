@@ -14,7 +14,7 @@ export const createTestimonialSchema = z.object({
     .string()
     .trim()
     .min(10, "Review must be at least 10 characters long")
-    .max(300, "Review cannot exceed 300 characters"),
+    .max(200, "Review cannot exceed 200 characters"),
 });
 
 export const updateTestimonialSchema = createTestimonialSchema.partial();

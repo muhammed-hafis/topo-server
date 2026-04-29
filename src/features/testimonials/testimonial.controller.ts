@@ -42,7 +42,7 @@ export const createTestimonial = async (req: Request, res: Response) => {
 export const getAllTestimonials = async (req: Request, res: Response) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
+    const limit = parseInt(req.query.limit as string) || 15;
     const result = await testimonialService.getAllTestimonials(page, limit);
     return res.status(200).json(result);
   } catch (error: any) {
