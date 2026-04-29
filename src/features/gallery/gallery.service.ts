@@ -2,7 +2,21 @@ import * as galleryRepository from "./gallery.repository";
 import { uploadBufferToCloudinary, deleteFromCloudinary } from "../../config/cloudinary";
 import { IGallery } from "./gallery.model";
 
-export const getAllGalleryImages = () => galleryRepository.findAllGalleryImages();
+export const getAllGalleryImages = async (page: number = 1, limit: number = 15) => {
+  const skip = (page - 1) * limit;
+  const [data, total] = await Promise.all([
+    galleryRepository.findAllGalleryImages(skip, limit),
+    galleryRepository.countGalleryImages()
+  ]);
+  
+  return {
+    data,
+    total,
+    page,
+    limit,
+    hasMore: skip + data.length < total
+  };
+};
 
 export const getGalleryById = async (id: string) => {
   const item = await galleryRepository.findGalleryById(id);

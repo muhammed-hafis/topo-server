@@ -4,7 +4,9 @@ export const createGallery = async (data: Partial<IGallery>) => {
   return await Gallery.create(data);
 };
 
-export const findAllGalleryImages = () => Gallery.find().sort({ createdAt: -1 });
+export const findAllGalleryImages = (skip: number = 0, limit: number = 15) => Gallery.find().sort({ createdAt: -1 }).skip(skip).limit(limit);
+
+export const countGalleryImages = () => Gallery.countDocuments();
 
 
 export const findGalleryById = async (id: string) => {

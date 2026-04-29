@@ -20,7 +20,19 @@ export const createTestimonialService = async (
   });
 };
 
-export const getAllTestimonials = () => testimonialRepository.findAllTestimonials();
+export const getAllTestimonials = async (page: number = 1, limit: number = 10) => {
+  const skip = (page - 1) * limit;
+  const testimonials = await testimonialRepository.findAllTestimonials(skip, limit);
+  const total = await testimonialRepository.countTestimonials();
+  const totalPages = Math.ceil(total / limit);
+
+  return {
+    testimonials,
+    totalPages,
+    currentPage: page,
+    total,
+  };
+};
 
 export const getTestimonialById = async (id: string) => {
   const testimonial = await testimonialRepository.findTestimonialById(id);

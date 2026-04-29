@@ -24,7 +24,9 @@ export const createGalleryItem = async (req: Request, res: Response) => {
 
 export const getAllGalleryImages = async (req: Request, res: Response) => {
   try {
-    const items = await galleryService.getAllGalleryImages();
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 15;
+    const items = await galleryService.getAllGalleryImages(page, limit);
     return res.status(200).json(items);
   } catch (error: any) {
     return res.status(500).json({ message: error.message || "Failed to fetch gallery images" });
