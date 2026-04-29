@@ -2,7 +2,23 @@ import * as productRepository from "./product.repository";
 import { uploadBufferToCloudinary, deleteFromCloudinary } from "../../config/cloudinary";
 import { IProduct } from "./product.model";
 
-export const getAllProducts = () => productRepository.findAllProducts();
+export const getAllProducts = async (page: number = 1, limit: number = 10) => {
+  const skip = (page - 1) * limit;
+  const [products, total] = await Promise.all([
+    productRepository.findAllProducts(skip, limit),
+    productRepository.countProducts(),
+  ]);
+
+  return {
+    products,
+    pagination: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
+};
 
 export const getProductById = async (id: string) => {
   const product = await productRepository.findProductById(id);

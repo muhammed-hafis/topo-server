@@ -41,8 +41,10 @@ export const createProduct = async (req: Request, res: Response) => {
 
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
-    const products = await productService.getAllProducts();
-    return res.status(200).json(products);
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 9;
+    const result = await productService.getAllProducts(page, limit);
+    return res.status(200).json(result);
   } catch (error: any) {
     return res.status(500).json({ message: "Failed to fetch products" });
   }
