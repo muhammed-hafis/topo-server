@@ -6,7 +6,7 @@ export const createProductSchema = z.object({
     .min(1, "Product name is required")
     .min(2, "Product name must be at least 2 characters")
     .max(60, "Product name must be 60 characters or less")
-    .regex(/^[a-zA-Z0-9\s\-]+$/, "Product name can only contain letters, numbers, spaces, and hyphens")
+    .regex(/^[a-zA-Z0-9\s\-]+$/, "Only letters, numbers, spaces and hyphens allowed")
     .trim(),
 
   title: z
@@ -20,7 +20,7 @@ export const createProductSchema = z.object({
     .string()
     .min(1, "Description is required")
     .min(10, "Description must be at least 10 characters")
-    .max(500, "Description must be 500 characters or less")
+    .max(200, "Description must be 200 characters or less")
     .trim(),
 });
 
