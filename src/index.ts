@@ -17,13 +17,13 @@ import { connectDB } from "./config/db";
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Trust proxy for secure cookies in production (e.g., Render)
+
 app.set("trust proxy", 1);
 
-// Connect to Database
+
 connectDB();
 
-// Middleware
+
 app.use(
   cors({
     origin: process.env.CLIENT_URL,
@@ -37,7 +37,7 @@ app.get("/", (req: Request, res: Response) => {
   res.send("TypeScript + Node.js Server is Running!");
 });
 
-// Routes
+
 app.use("/api/auth", authRoutes);
 
 app.use("/api/cms", cmsRoutes);
@@ -47,7 +47,7 @@ app.use("/api/faqs", faqRoutes);
 app.use("/api/reels", reelsRoutes);
 app.use("/api/testimonials", testimonialRoutes);
 
-// Global error handler
+
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   if (err.code === "LIMIT_FILE_SIZE") {
     return res.status(400).json({ message: "Image is too large. Maximum allowed size is 10MB." });

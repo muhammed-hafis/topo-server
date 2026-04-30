@@ -15,7 +15,7 @@ export const addImageService = async (
   section: "hero" | "about" | "why-choose" | "cta",
   file: Express.Multer.File
 ) => {
-  // 1. Enforce limits
+  
   const currentCount = await cmsRepository.countBySection(section);
   const limit = section === "about" ? 2 : 1;
 
@@ -25,14 +25,14 @@ export const addImageService = async (
     );
   }
 
-  // 2. Upload to Cloudinary
+  
   let uploadResult;
   try {
     uploadResult = await uploadBufferToCloudinary(file.buffer, `topo-admin/${section}`);
   } catch (error) {
     throw new Error(`Cloudinary upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
-  // 3. Create in DB
+  
   try {
     return await cmsRepository.createSectionImage({
       section,
@@ -50,9 +50,9 @@ export const addImageService = async (
 
 export const updateImageService = async (
   id: string,
-  file: Express.Multer.File  // ← Now required, not optional
+  file: Express.Multer.File  
 ) => {
-  // 1. Find existing image
+  
   const existingImage = await cmsRepository.findById(id);
   if (!existingImage) {
     throw new Error("Image not found");
@@ -61,7 +61,7 @@ export const updateImageService = async (
   let updateData: Partial<ISectionImage> = {};
 
   try {
-    // 2. Upload new file to Cloudinary
+    
     const uploadResult = await uploadBufferToCloudinary(
       file.buffer,
       `topo-admin/${existingImage.section}`
@@ -70,20 +70,20 @@ export const updateImageService = async (
     updateData.imageUrl = uploadResult.url;
     updateData.publicId = uploadResult.publicId;
 
-    // 3. Delete old image (non-blocking, but log errors)
+    
     if (existingImage.publicId) {
       deleteFromCloudinary(existingImage.publicId).catch((err) =>
         console.error("Failed to delete old image from Cloudinary:", err)
       );
     }
 
-    // 4. Update in DB
+    
     return await cmsRepository.updateById(id, updateData);
   } catch (error) {
-    // Cleanup: delete uploaded file if DB update fails
+    
     if (updateData.publicId) {
       await deleteFromCloudinary(updateData.publicId).catch(() => {
-        // Silent fail on cleanup
+        
       });
     }
     throw error;
@@ -103,7 +103,7 @@ export const deleteImageService = async (id: string) => {
     throw new Error("Image not found");
   }
 
-  // 1. Delete from Cloudinary
+  
   if (image.publicId) {
     deleteFromCloudinary(image.publicId)
       .catch((err) => {
@@ -114,6 +114,6 @@ export const deleteImageService = async (id: string) => {
       });
   }
 
-  // 2. Delete from DB
+  
   return image;
 };

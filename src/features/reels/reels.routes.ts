@@ -8,7 +8,7 @@ const router = Router();
 router.get("/", reelsController.getAllReels);
 router.get("/:id", reelsController.getReelById);
 
-// Protected routes
+
 router.post(
   "/",
   authenticateAdmin,

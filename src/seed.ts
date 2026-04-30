@@ -1,17 +1,17 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { Admin } from "./features/auth/admin.model";
-// load env
+
 dotenv.config();
 
 
 async function seedAdmin() {
     try {
-        // connect DB
+        
         await mongoose.connect(process.env.MONGODB_URI as string);
         console.log("✅ DB Connected");
 
-        // check if admin already exists
+        
         const existing = await Admin.findOne({ email: "admin@gmail.com" });
 
         if (existing) {
@@ -20,7 +20,7 @@ async function seedAdmin() {
         }
 
 
-        // create admin
+        
         const admin = await Admin.create({
             email: "admin@gmail.com",
             password: "admin@123"

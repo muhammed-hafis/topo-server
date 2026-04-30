@@ -7,7 +7,7 @@ const router = Router();
 router.get("/", galleryController.getAllGalleryImages);
 router.get("/:id", galleryController.getGalleryItemById);
 
-// Protected routes
+
 router.post(
   "/",
   authenticateAdmin,
